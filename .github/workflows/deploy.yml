@@ -24,13 +24,18 @@ jobs:
           SFTP_PASS: ${{ secrets.FTP_PASSWORD }}
           SFTP_DIR:  ${{ secrets.FTP_SERVER_DIR }}
         run: |
-          lftp -u "$SFTP_USER","$SFTP_PASS" sftp://"$SFTP_HOST" << EOF
+          lftp -u "$SFTP_USER","$SFTP_PASS" "sftp://$SFTP_HOST" << EOF
           set sftp:auto-confirm yes
           set net:max-retries 3
+          set xfer:log yes
+          echo "=== ROOT LISTING ==="
+          ls
+          echo "=== CHANGING TO: $SFTP_DIR ==="
           cd $SFTP_DIR
-          put index.html
-          put style.css
-          put app.js
-          put frames.js
+          echo "=== DIR LISTING AFTER CD ==="
+          ls
+          mput index.html style.css app.js frames.js
+          echo "=== LISTING AFTER UPLOAD ==="
+          ls
           quit
           EOF
