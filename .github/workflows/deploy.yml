@@ -14,13 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Ionos via FTP
+      - name: Deploy to Ionos via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server:          ${{ secrets.FTP_HOST }}
           username:        ${{ secrets.FTP_USER }}
           password:        ${{ secrets.FTP_PASSWORD }}
           server-dir:      ${{ secrets.FTP_SERVER_DIR }}
+          protocol:        ftps
+          port:            21
           # Only upload the four app files — skip git/github/CI config
           exclude: |
             **/.git/**
