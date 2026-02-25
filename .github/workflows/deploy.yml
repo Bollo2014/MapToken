@@ -6,25 +6,32 @@ on:
       - master
 
 jobs:
-  ftp-deploy:
-    name: FTP deploy static files
+  sftp-deploy:
+    name: SFTP deploy static files
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Ionos via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server:          ${{ secrets.FTP_HOST }}
-          username:        ${{ secrets.FTP_USER }}
-          password:        ${{ secrets.FTP_PASSWORD }}
-          server-dir:      ${{ secrets.FTP_SERVER_DIR }}
-          protocol:        ftps
-          port:            21
-          # Only upload the four app files — skip git/github/CI config
-          exclude: |
-            **/.git/**
-            **/.github/**
-            **/.gitignore
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy to Ionos via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.FTP_HOST }}
+          SFTP_USER: ${{ secrets.FTP_USER }}
+          SFTP_PASS: ${{ secrets.FTP_PASSWORD }}
+          SFTP_DIR:  ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          sshpass -p "$SFTP_PASS" sftp \
+            -o StrictHostKeyChecking=no \
+            -o Port=22 \
+            -b - \
+            "$SFTP_USER@$SFTP_HOST" << EOF
+          cd $SFTP_DIR
+          put index.html
+          put style.css
+          put app.js
+          put frames.js
+          EOF
