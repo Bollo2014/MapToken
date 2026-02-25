@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Map Token Creator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Map Token Creator</h1>
+  </header>
+
+  <main>
+    <section class="canvas-panel">
+      <div class="canvas-wrap">
+        <canvas id="preview" width="512" height="512"></canvas>
+        <canvas id="overlay" width="512" height="512"></canvas>
+      </div>
+    </section>
+
+    <aside class="controls-panel">
+
+      <div class="control-group">
+        <label class="upload-btn" for="imageUpload">
+          Upload Image
+          <input type="file" id="imageUpload" accept="image/*" hidden />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">Frame</div>
+        <div id="framePicker" class="frame-picker"></div>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">Frame Color</div>
+        <div class="color-row">
+          <input type="color" id="frameColor" value="#c0922a" />
+          <span id="colorHex" class="color-hex">#c0922a</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <button id="downloadBtn" class="download-btn">&#x2B07; Download PNG</button>
+      </div>
+
+    </aside>
+  </main>
+
+  <script src="frames.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
