@@ -1,0 +1,28 @@
+name: Deploy to Ionos
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ftp-deploy:
+    name: FTP deploy static files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Ionos via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:          ${{ secrets.FTP_HOST }}
+          username:        ${{ secrets.FTP_USER }}
+          password:        ${{ secrets.FTP_PASSWORD }}
+          server-dir:      ${{ secrets.FTP_SERVER_DIR }}
+          # Only upload the four app files — skip git/github/CI config
+          exclude: |
+            **/.git/**
+            **/.github/**
+            **/.gitignore
