@@ -14,27 +14,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install sshpass
-        run: sudo apt-get install -y sshpass
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
 
-      - name: Deploy to Ionos via SFTP
+      - name: Deploy to Ionos via SFTP (lftp)
         env:
           SFTP_HOST: ${{ secrets.FTP_HOST }}
           SFTP_USER: ${{ secrets.FTP_USER }}
           SFTP_PASS: ${{ secrets.FTP_PASSWORD }}
           SFTP_DIR:  ${{ secrets.FTP_SERVER_DIR }}
         run: |
-          sshpass -p "$SFTP_PASS" sftp \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            -o Port=22 \
-            -o PubkeyAuthentication=no \
-            -o PreferredAuthentications=password \
-            -b - \
-            "$SFTP_USER@$SFTP_HOST" << EOF
+          lftp -u "$SFTP_USER","$SFTP_PASS" sftp://"$SFTP_HOST" << EOF
+          set sftp:auto-confirm yes
+          set net:max-retries 3
           cd $SFTP_DIR
           put index.html
           put style.css
           put app.js
           put frames.js
+          quit
           EOF
