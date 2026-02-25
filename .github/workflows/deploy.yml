@@ -28,7 +28,8 @@ jobs:
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o Port=22 \
-            -v \
+            -o PubkeyAuthentication=no \
+            -o PreferredAuthentications=password \
             -b - \
             "$SFTP_USER@$SFTP_HOST" << EOF
           cd $SFTP_DIR
